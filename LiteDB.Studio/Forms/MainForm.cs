@@ -506,20 +506,13 @@ namespace LiteDB.Studio
 
         #region Grid Edit
 
-        private void GrdResult_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
-        {
-            var cell = grdResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
-
-            cell.Value = JsonSerializer.Serialize(cell.Tag as BsonValue);
-        }
-
         private void GrdResult_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             var field = grdResult.Columns[e.ColumnIndex].HeaderText;
             var id = grdResult.Rows[e.RowIndex].Cells["_id"].Tag as BsonValue;
             var cell = grdResult.Rows[e.RowIndex].Cells[e.ColumnIndex];
             var current = cell.Tag as BsonValue;
-            var text = cell.Value.ToString();
+            var text = TextUtility.ConvertStringToJson(cell.Value.ToString());
 
             // try run update collection using current/new value
             var value = this.UpdateCellGrid(id, field, current, text);
@@ -552,9 +545,10 @@ namespace LiteDB.Studio
         {
             try
             {
-                var value = JsonSerializer.Deserialize(json);
+                var value = json == null ? BsonValue.Null : JsonSerializer.Deserialize(json);
 
-                if (current == value) return current;
+                if (current == value)
+                    return current;
 
                 var r = _db.Execute($"UPDATE {this.ActiveTask.Collection} SET {field} = @0 WHERE _id = @1 AND {field} = @2",
                     new BsonDocument
@@ -564,7 +558,8 @@ namespace LiteDB.Studio
                         ["2"] = current
                     });
 
-                if (r.Current == 1) return value;
+                if (r.Current == 1)
+                    return value;
 
                 throw new Exception("Current document was not found. Try run your query again");
             }

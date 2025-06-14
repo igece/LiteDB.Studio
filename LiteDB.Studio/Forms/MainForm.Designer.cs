@@ -236,7 +236,6 @@
             this.grdResult.RowHeadersWidth = 51;
             this.grdResult.Size = new System.Drawing.Size(932, 429);
             this.grdResult.TabIndex = 0;
-            this.grdResult.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.GrdResult_CellBeginEdit);
             this.grdResult.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.GrdResult_CellEndEdit);
             this.grdResult.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GrdResult_CellFormatting);
             this.grdResult.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.GrdResult_RowPostPaint);

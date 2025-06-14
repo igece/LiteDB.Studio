@@ -9,6 +9,9 @@ using System;
 
 using ICSharpCode.TextEditor.Document;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 namespace ICSharpCode.TextEditor.Util
 {
 	public class TextUtility
@@ -77,5 +80,23 @@ namespace ICSharpCode.TextEditor.Util
 			}
 			return true;
 		}
-	}
+
+        public static string ConvertStringToJson(string inputString)
+        {
+            if (string.IsNullOrWhiteSpace(inputString))
+            {
+                return JsonConvert.SerializeObject(inputString);
+            }
+
+            try
+            {
+                JToken.Parse(inputString);
+                return inputString;
+            }
+            catch (JsonReaderException)
+            {
+                return JsonConvert.SerializeObject(inputString);
+            }
+        }
+    }
 }
